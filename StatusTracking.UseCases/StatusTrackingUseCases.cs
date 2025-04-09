@@ -38,7 +38,7 @@ namespace StatusTracking.UseCases
             await TryToSaveStatus(video);
         }
 
-        public async Task SalvarZipLinkComoUploadedAsync(string videoId)
+        public async Task AtualizaStatusComoUploadedAsync(string videoId)
         {
             var video = await TryGetVideoById(videoId);
 
