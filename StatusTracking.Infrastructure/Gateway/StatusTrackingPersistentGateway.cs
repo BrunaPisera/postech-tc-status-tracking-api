@@ -1,15 +1,11 @@
-﻿using StatusTracking.Core.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using StatusTracking.Core.Entities;
 using StatusTracking.Infrastructure.Data;
 using StatusTracking.UseCases.Gateway;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StatusTracking.Infrastructure.Gateway
 {
-    public class StatusTrackingPersistentGateway : IStatusTrackingPersistenceGateway
+    internal class StatusTrackingPersistentGateway : IStatusTrackingPersistenceGateway
     {
         private ApplicationContext Context;
 
@@ -18,15 +14,19 @@ namespace StatusTracking.Infrastructure.Gateway
             Context = context;
         }
 
-        public Task<StatusTrackingAggregate> GetVideoByIdAsync(string videoId)
+        public async Task<StatusTrackingAggregate?> GetVideoByIdAsync(string videoId)
         {
-            return await Context.Stat
-                       .FirstOrDefaultAsync(x => x.IdPedido == idPedido);
+            return await Context.StatusTracking
+                        .FirstOrDefaultAsync(x => x.VideoId == videoId);
         }
 
-        public Task<bool> SaveStatusAsync(StatusTrackingAggregate aggregate)
+        public async Task<bool> SaveStatusAsync(StatusTrackingAggregate aggregate)
         {
-            throw new NotImplementedException();
+            Context.StatusTracking.Update(aggregate);
+
+            var result = await Context.SaveChangesAsync();
+
+            return result > 0;
         }
     }
 }

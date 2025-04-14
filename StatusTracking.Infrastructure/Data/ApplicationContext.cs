@@ -1,38 +1,27 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StatusTracking.Core.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace StatusTracking.Infrastructure.Data
 {
     internal class ApplicationContext : DbContext
-    {
-        public ApplicationContext() { }
-
+    { 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql($"Host={Environment.GetEnvironmentVariable("DB_HOST")}; Database={Environment.GetEnvironmentVariable("DB_NAME")}; Username={Environment.GetEnvironmentVariable("DB_USER")}; Password={Environment.GetEnvironmentVariable("DB_PASSWORD")};");
+            optionsBuilder.UseNpgsql($"Host=localhost; Database=db-postech-final; Username=postgres; Password=banana123;");
 
             base.OnConfiguring(optionsBuilder);
         }
 
         public DbSet<StatusTrackingAggregate> StatusTracking { get; set; }
 
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    base.OnModelCreating(modelBuilder);
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
 
-        //    modelBuilder.HasSequence<int>("Seq_CodAcompanhamento")
-        //                .StartsAt(1)
-        //                .IncrementsBy(1);
-
-        //    modelBuilder.Entity<AcompanhamentoAggregate>(entity =>
-        //    {
-        //        entity.HasKey(e => e.Id);
-        //        entity.Property(e => e.CodigoAcompanhamento)
-        //            .HasDefaultValueSql("nextval('\"Seq_CodAcompanhamento\"')");
-        //        entity.HasIndex(e => e.Status)
-        //            .HasDatabaseName("IX_Status");
-        //    });
-        //}
+            modelBuilder.Entity<StatusTrackingAggregate>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+            });
+        }
     }
 }

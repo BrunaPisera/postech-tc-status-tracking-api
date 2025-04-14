@@ -1,5 +1,6 @@
 ﻿using StatusTracking.Core.Entities;
 using StatusTracking.Core.Entities.Enums;
+using StatusTracking.UseCases.DTOs;
 using StatusTracking.UseCases.Exceptions;
 using StatusTracking.UseCases.Gateway;
 using StatusTracking.UseCases.Interfaces;
@@ -22,30 +23,42 @@ namespace StatusTracking.UseCases
                 throw new OperacaoInvalidaException("Status de processamento do video precisa estar como uploaded para ser atualizado como InProcess.");
 
             video.Status = Status.InProcess;
-
+        
             await TryToSaveStatus(video);
         }
 
-        public async Task AtualizaStatusComoReadyAsync(string videoId)
+        public async Task AtualizaStatusComoReadyAsync(VideoProcessedMessageDto videoDto)
         {
-            var video = await TryGetVideoById(videoId);
+            var video = await TryGetVideoById(videoDto.VideoKey);
 
             if (video.Status != Status.InProcess)
                 throw new OperacaoInvalidaException("Status de processamento do video precisa estar como InProcess para ser atualizado como Ready.");
 
-            video.Status = Status.InProcess;
+            video.Status = Status.Ready;
+            video.VideoImagesZipFileUrl = videoDto.FilesURL;
 
             await TryToSaveStatus(video);
         }
 
-        public async Task AtualizaStatusComoUploadedAsync(string videoId)
+        public async Task SaveUploadedVideoAsync(string videoId)
+        {        
+            var video = new StatusTrackingAggregate()
+            {
+                VideoId = videoId,
+                Status = Status.Uploaded
+            };
+
+            await TryToSaveStatus(video);
+        }
+
+        public async Task AtualizaStatusComoErrorAsync(string videoId)
         {
-            var video = await TryGetVideoById(videoId);
-
-            if (video.Status != Status.Uploaded)
-                throw new OperacaoInvalidaException("Status de processamento do video precisa estar como uploaded para ser atualizado como InProcess.");
-
-            video.Status = Status.Uploaded;
+            var video = new StatusTrackingAggregate()
+            {
+                VideoId = videoId,
+                Status = Status.Error,
+                Errors = "Could not process the video properly."
+            };
 
             await TryToSaveStatus(video);
         }
@@ -62,6 +75,11 @@ namespace StatusTracking.UseCases
             var statusAtualizado = await StatusTrackingPersistenceGateway.SaveStatusAsync(status);
 
             if (!statusAtualizado) throw new OperacaoInvalidaException("Nao foi possivel atualizar o status do video.");
+        }
+
+        public async Task<StatusTrackingAggregate?> GetVideoByIdAsync(string videoId)
+        {
+            return await TryGetVideoById(videoId);
         }
     }
 }

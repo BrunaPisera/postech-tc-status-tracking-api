@@ -1,5 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ProcessService.Infrastructure.Broker;
+using StatusTracking.Infrastructure.Data;
+using StatusTracking.Infrastructure.Gateway;
+using StatusTracking.UseCases;
+using StatusTracking.UseCases.Gateway;
+using StatusTracking.UseCases.Interfaces;
 
 namespace StatusTracking.Infrastructure
 {
@@ -10,6 +15,10 @@ namespace StatusTracking.Infrastructure
             services.AddScoped<IBrokerConnection, BrokerConnection>();
             services.AddScoped<BrokerConsumer>();
 
+            services.AddScoped<IStatusTrackingUseCases, StatusTrackingUseCases>();
+            services.AddScoped<IStatusTrackingPersistenceGateway, StatusTrackingPersistentGateway>();
+
+            services.AddDbContext<ApplicationContext>();
             return services;
         }
     }
