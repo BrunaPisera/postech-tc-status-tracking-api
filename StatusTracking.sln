@@ -5,11 +5,17 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StatusTracking.API", "StatusTracking.API\StatusTracking.API.csproj", "{43DB62AE-9FAE-4CCB-A161-DA7326B1A869}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatusTracking.Infrastructure", "StatusTracking.Infrastructure\StatusTracking.Infrastructure.csproj", "{7FE00FD3-C201-4CA1-BD7B-2319C5411027}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StatusTracking.Infrastructure", "StatusTracking.Infrastructure\StatusTracking.Infrastructure.csproj", "{7FE00FD3-C201-4CA1-BD7B-2319C5411027}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatusTracking.Core", "StatusTracking.Core\StatusTracking.Core.csproj", "{19D30F1E-AE8A-4C10-BBE1-BCA9AF0DBFCE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StatusTracking.Core", "StatusTracking.Core\StatusTracking.Core.csproj", "{19D30F1E-AE8A-4C10-BBE1-BCA9AF0DBFCE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatusTracking.UseCases", "StatusTracking.UseCases\StatusTracking.UseCases.csproj", "{DB345AD7-9253-4857-B8C9-86B1596FF05A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StatusTracking.UseCases", "StatusTracking.UseCases\StatusTracking.UseCases.csproj", "{DB345AD7-9253-4857-B8C9-86B1596FF05A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A1D893F2-5CAF-4307-A1E0-3DA065AAACEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatusTracking.API.Tests", "StatusTracking.API.Tests\StatusTracking.API.Tests.csproj", "{884C4937-5036-41CE-92BD-36889BCF2B42}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatusTracking.UseCases.Tests", "StatusTracking.UseCases.Tests\StatusTracking.UseCases.Tests.csproj", "{8AC55700-CC09-47F9-A51B-978D1E96FAD7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +39,21 @@ Global
 		{DB345AD7-9253-4857-B8C9-86B1596FF05A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB345AD7-9253-4857-B8C9-86B1596FF05A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB345AD7-9253-4857-B8C9-86B1596FF05A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{884C4937-5036-41CE-92BD-36889BCF2B42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{884C4937-5036-41CE-92BD-36889BCF2B42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{884C4937-5036-41CE-92BD-36889BCF2B42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{884C4937-5036-41CE-92BD-36889BCF2B42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AC55700-CC09-47F9-A51B-978D1E96FAD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AC55700-CC09-47F9-A51B-978D1E96FAD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AC55700-CC09-47F9-A51B-978D1E96FAD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AC55700-CC09-47F9-A51B-978D1E96FAD7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{884C4937-5036-41CE-92BD-36889BCF2B42} = {A1D893F2-5CAF-4307-A1E0-3DA065AAACEC}
+		{8AC55700-CC09-47F9-A51B-978D1E96FAD7} = {A1D893F2-5CAF-4307-A1E0-3DA065AAACEC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {22FC5F63-D63A-43CA-AE8F-E06AE1C0B6C7}
