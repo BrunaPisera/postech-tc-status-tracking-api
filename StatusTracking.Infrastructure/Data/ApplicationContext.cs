@@ -7,7 +7,7 @@ namespace StatusTracking.Infrastructure.Data
     { 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql($"Host=localhost; Database=db-postech-final; Username=postgres; Password=banana123;");
+            optionsBuilder.UseNpgsql($"Host={Environment.GetEnvironmentVariable("DB_HOST")}; Database={Environment.GetEnvironmentVariable("DB_NAME")}; Username={Environment.GetEnvironmentVariable("DB_USER")}; Password={Environment.GetEnvironmentVariable("DB_PASSWORD")};");
 
             base.OnConfiguring(optionsBuilder);
         }

@@ -14,6 +14,11 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
+      - BROKER_HOSTNAME=${BROKER_HOSTNAME}
+      - BROKER_PORT=${BROKER_PORT}
+      - BROKER_USERNAME=${BROKER_USERNAME}
+      - BROKER_PASSWORD=${BROKER_PASSWORD}
+      - BROKER_VIRTUALHOST=${BROKER_VIRTUALHOST}
     networks:
       - status-tracking-network
 
