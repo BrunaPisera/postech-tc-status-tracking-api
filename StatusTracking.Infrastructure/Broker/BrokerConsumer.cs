@@ -7,40 +7,21 @@ namespace ProcessService.Infrastructure.Broker
 {
     public class BrokerConsumer
     {
-        readonly IBrokerConnection _brokerConnection;     
+        readonly IBrokerConnection _brokerConnection;
 
         public BrokerConsumer(IBrokerConnection brokerConnection)
         {
-            _brokerConnection = brokerConnection;     
+            _brokerConnection = brokerConnection;
         }
 
         public void BrokerStartConsumer<T>(string queueName, string exchange, string routingKey, Action<T> callback)
         {
-            var channel = _brokerConnection.CreateChannel();
-
-            channel.ExchangeDeclare(exchange: exchange,
-                                    type: ExchangeType.Topic,
-                                    durable: true,
-                                    autoDelete: false);
-
-            channel.QueueDeclare(queueName, true, false, false, null);
-
-            channel.QueueBind(queue: queueName,
-                                exchange: exchange,
-                                routingKey: routingKey);
-
-            var consumer = new EventingBasicConsumer(channel);
-
-            consumer.Received += (model, ea) =>
+            var channel = PrepareChannel(queueName, exchange, routingKey);
+            var consumer = CreateConsumer(channel, queueName, routingKey, (message) =>
             {
-                var body = ea.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
-                Console.WriteLine($"Queue name: {queueName}");
-                Console.WriteLine($"Routing key: {routingKey}");
                 try
                 {
                     T deserializedObject = JsonSerializer.Deserialize<T>(message);
-
                     if (deserializedObject != null)
                     {
                         callback(deserializedObject);
@@ -50,41 +31,18 @@ namespace ProcessService.Infrastructure.Broker
                 {
                     Console.WriteLine($"Erro ao desserializar a mensagem: {ex.Message}");
                 }
+            });
 
-                channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
-            };
-
-            channel.BasicConsume(queue: queueName,
-                                    autoAck: false,
-                                    consumer: consumer);
-
+            channel.BasicConsume(queue: queueName, autoAck: false, consumer: consumer);
         }
 
         public void BrokerStartConsumer(string queueName, string exchange, string routingKey, Action<string> callback)
         {
-            var channel = _brokerConnection.CreateChannel();
-
-            channel.ExchangeDeclare(exchange: exchange,
-                                    type: ExchangeType.Topic,
-                                    durable: true,
-                                    autoDelete: false);
-
-            channel.QueueDeclare(queueName, true, false, false, null);
-
-            channel.QueueBind(queue: queueName,
-                                exchange: exchange,
-                                routingKey: routingKey);
-
-            var consumer = new EventingBasicConsumer(channel);
-
-            consumer.Received += (model, ea) =>
+            var channel = PrepareChannel(queueName, exchange, routingKey);
+            var consumer = CreateConsumer(channel, queueName, routingKey, (message) =>
             {
-                var body = ea.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
-                Console.WriteLine($"Queue name: {queueName}");
-                Console.WriteLine($"Routing key: {routingKey}");
                 try
-                {          
+                {
                     if (!string.IsNullOrEmpty(message))
                     {
                         callback(message);
@@ -92,16 +50,42 @@ namespace ProcessService.Infrastructure.Broker
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Erro ao desserializar a mensagem: {ex.Message}");
+                    Console.WriteLine($"Erro ao processar a mensagem: {ex.Message}");
                 }
+            });
+
+            channel.BasicConsume(queue: queueName, autoAck: false, consumer: consumer);
+        }
+
+        private IModel PrepareChannel(string queueName, string exchange, string routingKey)
+        {
+            var channel = _brokerConnection.CreateChannel();
+
+            channel.ExchangeDeclare(exchange: exchange, type: ExchangeType.Topic, durable: true, autoDelete: false);
+            channel.QueueDeclare(queueName, durable: true, exclusive: false, autoDelete: false, arguments: null);
+            channel.QueueBind(queue: queueName, exchange: exchange, routingKey: routingKey);
+
+            return channel;
+        }
+
+        private EventingBasicConsumer CreateConsumer(IModel channel, string queueName, string routingKey, Action<string> processMessage)
+        {
+            var consumer = new EventingBasicConsumer(channel);
+
+            consumer.Received += (model, ea) =>
+            {
+                var body = ea.Body.ToArray();
+                var message = Encoding.UTF8.GetString(body);
+
+                Console.WriteLine($"Queue name: {queueName}");
+                Console.WriteLine($"Routing key: {routingKey}");
+
+                processMessage(message);
 
                 channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             };
 
-            channel.BasicConsume(queue: queueName,
-                                    autoAck: false,
-                                    consumer: consumer);
-
+            return consumer;
         }
     }
 }
