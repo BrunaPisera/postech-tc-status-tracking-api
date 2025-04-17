@@ -7,10 +7,6 @@ apiImage:
   tag: latest
 apiNodePort: 30200
 
-# Secret
-secret:
-  name: process-secret
-
 rabbitmq:
   username: xtpbliuz 
   hostname: woodpecker-01.rmq.cloudamqp.com
