@@ -1,9 +1,9 @@
 namespace: dev
 
 # API
-apiName: process-service
+apiName: status-tracking-api
 apiImage: 
-  name: brunapisera/process-service
+  name: brunapisera/status-tracking-api
   tag: latest
 apiNodePort: 30200
 
