@@ -1,0 +1,30 @@
+namespace: default
+
+# API
+apiName: status-tracking-api
+apiImage: 
+  name: brunapisera/status-tracking-api
+  tag: latest
+apiNodePort: 30200
+
+# Config map
+configmap:
+  name: status-config-map
+  data:
+
+rabbitmq:
+  username: xtpbliuz 
+  hostname: woodpecker-01.rmq.cloudamqp.com
+  password: 
+  port: 5672
+  virtualhost: xtpbliuz
+
+# Secret
+secret:
+  name: status-secret
+
+rds:
+  host: 
+  dbName: 
+  user: 
+  password: 

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.configmap.name }}
+  namespace: {{ .Values.namespace }}
+data:
+  BROKER_HOSTNAME: "{{ .Values.rabbitmq.hostname }}"
+  BROKER_PORT: "{{ .Values.rabbitmq.port }}"
+  BROKER_USERNAME: "{{ .Values.rabbitmq.username }}"
+  BROKER_VIRTUALHOST: "{{ .Values.rabbitmq.virtualhost }}"
+  DB_HOST: "{{ .Values.rds.host }}"
+  DB_NAME: "{{ .Values.rds.dbName }}"
+  DB_USER: "{{ .Values.rds.user }}"
